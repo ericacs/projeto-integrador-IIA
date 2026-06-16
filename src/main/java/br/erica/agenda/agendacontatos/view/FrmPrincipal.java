@@ -12,7 +12,7 @@ public class FrmPrincipal extends JPanel {
 
     private JTextField txtId;
     private JTextField txtNome;
-    private JTextField txtTelefone;
+    private JFormattedTextField txtTelefone;
     private JTextField txtEmail;
 
     private JButton btnNovo;
@@ -48,7 +48,8 @@ public class FrmPrincipal extends JPanel {
         txtId.setEditable(false);
 
         txtNome = new JTextField(20);
-        txtTelefone = new JTextField(20);
+        txtTelefone = new JFormattedTextField();
+        txtTelefone.setColumns(20);
         txtEmail = new JTextField(20);
 
         gbc.gridx = 0;
@@ -159,7 +160,7 @@ public class FrmPrincipal extends JPanel {
 
         Contato contato = new Contato(
                 txtNome.getText(),
-                txtTelefone.getText(),
+                removerMascaraTelefone(txtTelefone.getText()),
                 txtEmail.getText()
         );
 
@@ -184,7 +185,7 @@ public class FrmPrincipal extends JPanel {
         Contato contato = new Contato(
                 Integer.parseInt(txtId.getText()),
                 txtNome.getText(),
-                txtTelefone.getText(),
+                removerMascaraTelefone(txtTelefone.getText()),
                 txtEmail.getText()
         );
 
@@ -237,7 +238,7 @@ public class FrmPrincipal extends JPanel {
             modeloTabela.addRow(new Object[]{
                     contato.getId(),
                     contato.getNome(),
-                    contato.getTelefone(),
+                    formatarTelefone(contato.getTelefone()),
                     contato.getEmail()
             });
 
@@ -256,7 +257,7 @@ public class FrmPrincipal extends JPanel {
             modeloTabela.addRow(new Object[]{
                     contato.getId(),
                     contato.getNome(),
-                    contato.getTelefone(),
+                    formatarTelefone(contato.getTelefone()),
                     contato.getEmail()
             });
         }
@@ -276,7 +277,7 @@ public class FrmPrincipal extends JPanel {
     private void preencherCampos(Contato contato) {
         txtId.setText(String.valueOf(contato.getId()));
         txtNome.setText(contato.getNome());
-        txtTelefone.setText(contato.getTelefone());
+        txtTelefone.setText(formatarTelefone(contato.getTelefone()));
         txtEmail.setText(contato.getEmail());
     }
 
@@ -303,6 +304,12 @@ public class FrmPrincipal extends JPanel {
             return false;
         }
 
+        if (!telefoneValido(txtTelefone.getText())) {
+            JOptionPane.showMessageDialog(this, "Informe um telefone válido com DDD.\nExemplo: (62) 98800-1500 ou (62) 3595-1562");
+            txtTelefone.requestFocus();
+            return false;
+        }
+
         if (txtEmail.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Informe o email.");
             txtEmail.requestFocus();
@@ -310,5 +317,43 @@ public class FrmPrincipal extends JPanel {
         }
 
         return true;
+    }
+
+    private String removerMascaraTelefone(String telefone) {
+        if (telefone == null) {
+            return "";
+        }
+
+        return telefone.replaceAll("\\D", "");
+    }
+
+    private String formatarTelefone(String telefone) {
+        String numeros = removerMascaraTelefone(telefone);
+
+        if (numeros.length() == 11) {
+            return String.format(
+                    "(%s) %s-%s",
+                    numeros.substring(0, 2),
+                    numeros.substring(2, 7),
+                    numeros.substring(7)
+            );
+        }
+
+        if (numeros.length() == 10) {
+            return String.format(
+                    "(%s) %s-%s",
+                    numeros.substring(0, 2),
+                    numeros.substring(2, 6),
+                    numeros.substring(6)
+            );
+        }
+
+        return telefone;
+    }
+
+    private boolean telefoneValido(String telefone) {
+        String numeros = removerMascaraTelefone(telefone);
+
+        return numeros.length() == 10 || numeros.length() == 11;
     }
 }

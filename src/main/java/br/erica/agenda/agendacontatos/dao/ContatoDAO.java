@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class ContatoDAO {
 
     public void adicionarContato(Contato contato) {
-        String sql = "INSERT INTO contatos (nome, telefone, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO contato (nome, telefone, email) VALUES (?, ?, ?)";
         try (Connection conexao = Conexao.conectar(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setString(1, contato.getNome());
             stmt.setString(2, contato.getTelefone());
@@ -38,7 +38,7 @@ public class ContatoDAO {
     }
     
     public void atualizarContato(Contato contato) {
-        String sql = "UPDATE contatos SET nome = ?, telefone = ?, email = ? where id = ?";
+        String sql = "UPDATE contato SET nome = ?, telefone = ?, email = ? where id = ?";
         try (Connection conexao = Conexao.conectar(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setString(1, contato.getNome());
             stmt.setString(2, contato.getTelefone());
@@ -57,7 +57,7 @@ public class ContatoDAO {
 
     public ArrayList<Contato> listarContatos() {
         ArrayList<Contato> contatos = new ArrayList<>();
-        String sql = "SELECT * FROM contatos ORDER BY nome";
+        String sql = "SELECT * FROM contato ORDER BY nome";
 
         try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -83,7 +83,7 @@ public class ContatoDAO {
 
     public Contato buscarContato(String nome) {
         //Usando ilike pois ele faz consulta case insensitive
-        String sql = "SELECT * FROM contatos WHERE nome ILIKE ? LIMIT 1";
+        String sql = "SELECT * FROM contato WHERE nome ILIKE ? LIMIT 1";
 
         try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -109,7 +109,7 @@ public class ContatoDAO {
     }
 
     public void removerContato(int id) {
-        String sql = "DELETE FROM contatos WHERE id = ?";
+        String sql = "DELETE FROM contato WHERE id = ?";
 
         try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
