@@ -15,6 +15,18 @@ import javax.swing.*;
 public class AgendaContatos {
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException |
+                 IllegalAccessException | UnsupportedLookAndFeelException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Não foi possível aplicar o tema Nimbus.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+        
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Agenda de Contatos");
             frame.setContentPane(new FrmPrincipal());
